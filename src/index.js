@@ -10,4 +10,5 @@ import Game from './components/game';
 ReactDOM.render(
     <Game />,
     document.getElementById('root')
+    
 );
