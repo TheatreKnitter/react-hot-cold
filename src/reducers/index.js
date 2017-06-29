@@ -1,46 +1,65 @@
-import {MAKE_GUESS_SUCCESS, NEW_GAME} from '../actions';
+import {MAKE_GUESS_SUCCESS, 
+		NEW_GAME, 
+		TOGGLE_INFO_MODAL
+} from '../actions';
 
 const initialState = {
-	guesses: []
-	};
+    guesses: [],
+    feedback: 'Make your guess!',
+    correctAnswer: Math.round(Math.random() * 100),
+    showInfoModal: false
+};
 
+export default (state, action) => {
+    state = state || initialState;
+    if (action.type === NEW_GAME) {
+        state = Object.assign({
+        }, initialState, {
+            correctAnswer: action.correctAnswer
+        });
+        return state;
+    }
+    else if (action.type === MAKE_GUESS_SUCCESS) {
+        const guess = parseInt(action.guess, 10);
+        if (isNaN(guess)) {
+            state = Object.assign({}, state, {
+                feedback: 'Please enter a valid number'
+            });
 
-export default (state=initialState, action) => {
-	
-	if (action.type === MAKE_GUESS_SUCCESS) {
-        if (isNaN(parseInt(action.guess, 10))) {
-            var guesses = state.guesses;
-            guesses.push(action.guess);
-            const difference = Math.abs(parseInt(action.guess) - parseInt(state.correctAnswer));
-	        let feedback;
-        	if (difference >= 50) {
-            	feedback = 'You\'re Ice Cold...';
-        	}
-        	else if (difference >= 30) {
-            	feedback = 'You\'re Cold...';
-        	}
-        	else if (difference >= 10) {
-            	feedback = 'You\'re Warm';
-        	}
-        	else if (difference >= 1) {
-            	feedback = 'You\'re Hot!';
-        	}
-        	else {
-            	feedback = 'You got it!';
-        	}
-		return Object.assign({}, state, {
-			guesses: guesses, 
-			feedback: feedback
-		});
-	} else if (action.type === NEW_GAME){
-		const correctAnswer = Math.round(Math.random()* 100);
-		const feedback = 'Make your guess!';
-		return Object.assign({}, state, {
-			correctAnswer: correctAnswer, 
-			feedback: 'Make your Guess!',
-			guesses: []
-		});
-	}
-}
-	return state;
+            return state;
+        }
+
+        const difference = Math.abs(guess - state.correctAnswer);
+
+        let feedback;
+        if (difference >= 50) {
+            feedback = 'You\'re Ice Cold...';
+        }
+        else if (difference >= 30) {
+            feedback = 'You\'re Cold...';
+        }
+        else if (difference >= 10) {
+            feedback = 'You\'re Warm';
+        }
+        else if (difference >= 1) {
+            feedback = 'You\'re Hot!';
+        }
+        else {
+            feedback = 'You got it!';
+        }
+
+        state = Object.assign({}, state, {
+            feedback,
+            guesses: state.guesses.concat(action.guess)
+        });
+
+        return state;
+    }
+    else if (action.type === TOGGLE_INFO_MODAL) {
+         state = Object.assign({}, state, {
+             showInfoModal: !state.showInfoModal
+        });
+        return state;
+    }
+    return state;
 };
