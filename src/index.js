@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import './reset.css';
 import './index.css';
-import store from './reducers';
+import store from './store';
 
 import Game from './components/game';
 

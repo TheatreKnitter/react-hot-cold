@@ -10,7 +10,7 @@ const initialState = {
     showInfoModal: false
 };
 
-export default (state, action) => {
+export const guessReducer = (state = initialState, action) => {
     state = state || initialState;
     if (action.type === NEW_GAME) {
         state = Object.assign({
